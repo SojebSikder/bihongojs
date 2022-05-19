@@ -1,7 +1,6 @@
 {
   "name": "bihongojs",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/SojebSikder/bihongojs.git",
   "author": "Sojeb Sikder <sojebsikder@gmail.com>",
   "license": "MIT"
