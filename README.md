@@ -1,2 +1,2 @@
 # bihongo-js
-a javascript library
+a javascript library (experimental)

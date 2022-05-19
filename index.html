@@ -1,130 +1,104 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <base href="http://localhost/bihongojs/" />
+    <title>JS Test</title>
+    <link rel="stylesheet" href="css/material.css">
+  </head>
 
-<head>
-  <base href="http://localhost/bihongojs/">
-  <title>JS Test</title>
+  <body id="myapp">
+    <h1 class="h" id="h">Fade In</h1>
 
-  <script src="js/jsoj.js"></script>
+    <br />
+    <div id="cont">ajax request</div>
+    <input id="ld" type="button" value="Load Data" />
+    <br />
+    <img id="profile_img" class="left-block img-thumbnail" src="" />
+    <br />
+    <label class="btn btn-primary" for="profile_input">Browse...</label>
+    <input type="file" class="m-hidden" name="photo" id="profile_input" />
 
-</head>
+    <input id="pass" type="password" />
+    <input id="show" type="button" value="Show" />
 
-<body id="myapp">
-  <h1 class="h" id="h">Fade In </h1>
+    <nav>
+      <a href="#/">Root</a>
+      <a href="#/home">Home</a>
+      <a href="#/about">About</a>
+    </nav>
 
-  <br>
-  <div id="cont">ajax request</div>
-  <input id="ld" type="button" value="Load Data">
-  <br>
-  <img id="profile_img" class="left-block img-thumbnail" src="">
-  <br>
-  <label class="btn btn-primary" for="profile_input">Browse...</label>
-  <input type="file" class="m-hidden" name="photo" id="profile_input" />
+    <input id="sojeb" type="text" />
+    <span id="value"></span>
+    <div class="editor-container"></div>
+    <textarea id="text"></textarea>
 
-  <input id="pass" type="password">
-  <input id="show" type="button" value="Show">
+    <s-view></s-view>
 
+    <script src="js/jsoj.js"></script>
+    <script>
+      //frontend framework for single page application
+      var app = new Soj({
+        el: "#myapp",
+        data: {
+          message: "my first app",
+          name: "sojeb",
+          tag: "<h1>This is h1</h1>"
+        },
+      })
 
-  <nav>
-    <a href="#/">Root</a>
-    <a href="#/home">Home</a>
-    <a href="#/about">About</a>
-  </nav>
-
-  <input id="sojeb" type="text">
-  <span id="value"></span>
-  <div class="editor-container"></div>
-  <textarea id="text"></textarea>
-
-  <s-view></s-view>
-
-  <h1 id="msg">{{ message }}</h1>
-
-
-
-  <script>
-
-    //frontend framework for single page application
-    var app = new Soj({
-      el: '#myapp',
-      data: {
-        message: 'my first app',
-        sojeb: 'sikder',
-        click: 'click me',
-        h1: '<h1>This is h1</h1>'
-      }
-    })
-
-      //routing
-      .config(function () {
-        app.route("/", {
-          templateUrl: "template/root.html"
-        })
-
-        app.route("/home", {
-          templateUrl: "template/index.html",
-          controller: "homeController"
-        })
-
-          .route("/about", {
-            templateUrl: "template/about.html"
+        //routing
+        .config(function () {
+          app.route("/", {
+            templateUrl: "template/root.html",
           });
 
-        //controller
-        app.controller("homeController", function () {
-          document.querySelector('#msg').innerHTML = "Your message";
+          app
+            .route("/home", {
+              templateUrl: "template/index.html",
+              controller: "homeController",
+            })
+
+            .route("/about", {
+              templateUrl: "template/about.html",
+            });
+
+          //controller
+          app.controller("homeController", function () {
+            document.querySelector("#msg").innerHTML = "controller executed";
+          });
+          //end controller
         });
-        //end controller
 
+      //editor
+      j("#text").beditor(".editor-container");
+      //data binding set
+      setModel("sojeb", "value");
+
+      //for helper
+      j("#show").on("click", function () {
+        j("#pass").showPass();
       });
 
-
-
-
-
-
-
-    //editor
-    j('#text').beditor('.editor-container');
-    //data binding set
-    setModel('sojeb', 'value');
-
-
-    //for helper
-    j('#show').on('click', function () {
-      j('#pass').showPass();
-    })
-
-
-    //for image manopulation
-    j('#profile_input').on('change', function () {
-      j('#profile_input').imageSet(j('#profile_img'))
-    });
-
-
-    //for ajax request
-    j('#ld').on('click', function () {
-      http.ajax({
-        method: "POST",
-        url: "data.json",
-        dataType: "json",
-        success: function (data) {
-          j('#cont').element.innerHTML = data[0].name;
-        }
+      //for image manopulation
+      j("#profile_input").on("change", function () {
+        j("#profile_input").imageSet(j("#profile_img"));
       });
 
-    });
+      //for ajax request
+      j("#ld").on("click", function () {
+        http.ajax({
+          method: "POST",
+          url: "data.json",
+          dataType: "json",
+          success: function (data) {
+            j("#cont").element.innerHTML = data[0].name;
+          },
+        });
+      });
 
-
-    //for animation, css
-    j('#h').fadeIn(1000);
-    j('#h').css('color', 'red');
-
-
-
-  </script>
-
-
-</body>
-
+      //for animation, css
+      j("#h").fadeIn(1000);
+      j("#h").css("color", "red");
+    </script>
+  </body>
 </html>
