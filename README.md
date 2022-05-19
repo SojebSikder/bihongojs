@@ -2,6 +2,11 @@
 
 a javascript library (experimental)
 
+## How to use
+link jsoj.js to your project. And also link material.css
+
+## Usage
+
 ```
 //text editor
 j("#text").beditor(".editor-container");
