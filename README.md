@@ -1,10 +1,10 @@
 <div align="center">
-<img alt="npm" src="https://img.shields.io/npm/v/create-sojeb-express-ts-app/latest.svg?style=flat&logo=npm">
-<img alt="npm" src="https://img.shields.io/npm/dm/create-sojeb-express-ts-app">
-<img alt="npm" src="https://img.shields.io/npm/dy/create-sojeb-express-ts-app">
+<img alt="npm" src="https://img.shields.io/npm/v/bihongojs/latest.svg?style=flat&logo=npm">
+<img alt="npm" src="https://img.shields.io/npm/dm/bihongojs">
+<img alt="npm" src="https://img.shields.io/npm/dy/bihongojs">
 <img alt="npm" src="https://img.shields.io/badge/Typescript-294E80.svg?flat&logo=typescript">
-<img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/create-sojeb-express-ts-app">
-<img alt="GitHub issues" src="https://img.shields.io/github/issues/sojebsikder/create-sojeb-express-ts-app">
+<img alt="Snyk Vulnerabilities for npm package" src="https://img.shields.io/snyk/vulnerabilities/npm/bihongojs">
+<img alt="GitHub issues" src="https://img.shields.io/github/issues/sojebsikder/bihongojs">
 
 </div>
 
