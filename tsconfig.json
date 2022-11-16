@@ -1,7 +1,7 @@
 {
   // Most ts-node options can be specified here using their programmatic names.
   "ts-node": {
-    "swc": true,
+    "swc": true
     // It is faster to skip typechecking.
     // Remove if you want ts-node to do typechecking.
     // "transpileOnly": true,
@@ -19,7 +19,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    
+
     /* Modules */
     "module": "commonjs",
     "sourceMap": true,
@@ -31,5 +31,5 @@
     "skipLibCheck": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["typings/*", "node_modules"]
+  "exclude": ["typings/*", "node_modules", "dist/**/*"]
 }
