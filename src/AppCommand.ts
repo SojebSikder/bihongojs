@@ -56,7 +56,7 @@ export class AppCommand {
       try {
         const name = Command.args(3);
 
-        // directory firsy
+        // create directory first
         if (!fs_sync.existsSync(`${controller_path}/${name}`)) {
           fs_sync.mkdirSync(`${controller_path}/${name}`, { recursive: true });
         }
@@ -95,10 +95,16 @@ export class AppCommand {
       try {
         const name = Command.args(3);
 
+        // create directory first
+        if (!fs_sync.existsSync(`${model_path}/${name}`)) {
+          fs_sync.mkdirSync(`${model_path}/${name}`, { recursive: true });
+        }
+
         let filename = name.split("/").pop();
 
         await fs.writeFile(
-          `${model_path}/${filename}.ts`,
+          // `${model_path}/${filename}.ts`,
+          `${model_path}/${name}/${filename}.ts`,
 
           AppCommand.createModel(AppCommand.parseFileNameFromPath(filename))
         );
@@ -121,9 +127,14 @@ export class AppCommand {
       try {
         const name = Command.args(3);
 
+        // create directory first
+        if (!fs_sync.existsSync(`${controller_path}/${name}`)) {
+          fs_sync.mkdirSync(`${controller_path}/${name}`, { recursive: true });
+        }
+
         let filename = name.split("/").pop();
         await fs.writeFile(
-          `${controller_path}/${name}.ts`,
+          `${controller_path}/${name}/${filename}.ts`,
 
           AppCommand.createController(
             AppCommand.parseFileNameFromPath(filename)
@@ -147,10 +158,14 @@ export class AppCommand {
     Command.set("make:service", async function () {
       try {
         const name = Command.args(3);
+        // create directory first
+        if (!fs_sync.existsSync(`${controller_path}/${name}`)) {
+          fs_sync.mkdirSync(`${controller_path}/${name}`, { recursive: true });
+        }
 
         let filename = name.split("/").pop();
         await fs.writeFile(
-          `${controller_path}/${name}.ts`,
+          `${controller_path}/${name}/${filename}.ts`,
 
           AppCommand.createService(AppCommand.parseFileNameFromPath(filename))
         );
@@ -223,7 +238,7 @@ export class AppCommand {
    */
   public static createModel(modelName) {
     modelName = StringHelper.cfirst(`${modelName}`);
-    const data = `import { ORM } from "../../system/src/core/ORM";
+    const data = `import { ORM } from "bihongojs";
 
 export class ${modelName} extends ORM{
   // define custom table name like this:
@@ -246,8 +261,8 @@ export class ${modelName} extends ORM{
     const serviceNameUncap = StringHelper.ucfirst(`${name}Service`);
 
     const data = `import { Request, Response } from "express";
-import { Dinjectable } from "../../../system/src";
-import { Controller, Delete, Get, Patch, Post } from "../../../system/src/core/decorator";
+import { Dinjectable } from "bihongojs";
+import { Controller, Delete, Get, Patch, Post } from "bihongojs";
 import { ${serviceName} } from "./${module}.service";
 
 @Dinjectable()
@@ -292,7 +307,7 @@ export class ${controllerName} {
    */
   public static createService(serviceName) {
     serviceName = StringHelper.cfirst(`${serviceName}Service`);
-    const data = `import { Dinjectable } from "../../../system/src";
+    const data = `import { Dinjectable } from "bihongojs";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
