@@ -8,8 +8,11 @@ import { ORMStorage } from "./ORMStorage";
  * @extends {DB}
  * @author Sojeb Sikder <sojebsikder@gmail.com>
  * @example
- * import { ORM } from "../../system/core/ORM";
+ * import { ORM } from "bihongojs";
  * class Data extends ORM {
+ *   constructor() {
+ *    super("datas");
+ *   }
  *  title: string;
  *  text: string;
  * }
