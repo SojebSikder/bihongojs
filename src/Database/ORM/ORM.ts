@@ -86,9 +86,6 @@ export class ORM {
   // }
   /**
    * Eagar loading
-   * @param relationTable
-   * @param localKey
-   * @param foreignKey
    * @returns
    */
   public with(array) {
@@ -105,6 +102,13 @@ export class ORM {
     return this;
   }
 
+  /**
+   * belongs to relationship
+   * @param relationTable
+   * @param foreignKey
+   * @param localKey
+   * @returns
+   */
   public belongsTo(relationTable, foreignKey = "id", localKey = "id") {
     let query;
     query = ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
