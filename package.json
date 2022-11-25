@@ -20,7 +20,8 @@
   "author": "Sojeb Sikder <sojebsikder@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc --project tsconfig.json"
+    "build": "tsc --project tsconfig.json",
+    "start":"nodemon app.ts"
   },
   "dependencies": {
     "aws-sdk": "^2.1231.0",

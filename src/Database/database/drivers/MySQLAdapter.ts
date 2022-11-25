@@ -1,4 +1,5 @@
 import mysql from "mysql";
+import { DBHelper } from "../../helper/db.helper";
 
 import { IAdapter } from "./iAdapter";
 
@@ -22,8 +23,8 @@ export class MySQLAdapter implements IAdapter {
   private dbname: string;
   private databaseUrl: string;
 
-  public connection;
-  public error;
+  private connection: mysql.Connection;
+  private error;
 
   constructor(connection: Option) {
     this.host = connection.host;
@@ -32,40 +33,44 @@ export class MySQLAdapter implements IAdapter {
     this.dbname = connection.dbname;
     this.databaseUrl = connection.databaseUrl;
 
-    if (this.databaseUrl != null) {
+    if (this.host || this.databaseUrl) {
       this.connectDB();
     }
   }
 
   private connectDB = () => {
-    if (this.databaseUrl == null) {
-      this.connection = mysql.createConnection({
-        host: this.host,
-        user: this.user,
-        password: this.pass,
-        database: this.dbname,
-      });
-    } else {
-      this.connection = mysql.createConnection(this.databaseUrl);
-    }
-
-    this.connection.connect(function (err) {
-      if (err) {
-        this.error = err;
-        throw err;
+    try {
+      if (!this.databaseUrl) {
+        this.connection = mysql.createConnection({
+          host: this.host,
+          user: this.user,
+          password: this.pass,
+          database: this.dbname,
+        });
+      } else {
+        this.connection = mysql.createConnection(this.databaseUrl);
       }
-    });
+
+      this.connection.connect(function (err) {
+        if (err) {
+          this.error = err;
+          throw err;
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   // Select or Read data
-  public select = async (query) => {
+  public async select(query) {
     // returns a promise
     return new Promise((resolve, reject) => {
       try {
         this.connection.query(query, (err, result, fields) => {
           if (err) reject(err);
           if (result.length > 0) {
-            resolve(result);
+            resolve(DBHelper.parseResult(result));
           } else {
             resolve(false);
           }
@@ -74,7 +79,7 @@ export class MySQLAdapter implements IAdapter {
         reject(error);
       }
     });
-  };
+  }
 
   // Select or Read data
   public selectOne(query) {
@@ -86,7 +91,7 @@ export class MySQLAdapter implements IAdapter {
             reject(err);
           }
           if (result.length > 0) {
-            resolve(result[0]);
+            resolve(DBHelper.parseResult(result[0]));
           } else {
             resolve(false);
           }

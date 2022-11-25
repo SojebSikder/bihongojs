@@ -27,24 +27,28 @@ export class Builder {
   }
 
   public DBSwitcher(toggle = false) {
-    let dbsw, driver;
-    if (toggle == false) {
-      dbsw = this._driver;
-    } else {
-      dbsw = toggle;
-    }
+    try {
+      let dbsw, driver;
+      if (toggle == false) {
+        dbsw = this._driver;
+      } else {
+        dbsw = toggle;
+      }
 
-    switch (dbsw) {
-      case "mysql":
-        driver = new MySQLAdapter(this._connection);
-        break;
+      switch (dbsw) {
+        case "mysql":
+          driver = new MySQLAdapter(this._connection);
+          break;
 
-      default:
-        driver = new MySQLAdapter(this._connection);
-        break;
+        default:
+          driver = new MySQLAdapter(this._connection);
+          break;
+      }
+      this.db = new Dbase(driver);
+      return this.db;
+    } catch (error) {
+      throw error;
     }
-    this.db = new Dbase(driver);
-    return this.db;
   }
 
   public create_table(table, if_not_exist = true, attributes = []) {
