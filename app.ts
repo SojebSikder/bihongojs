@@ -1,4 +1,5 @@
 import { Data } from "./model/Data";
+import { User } from "./model/User";
 import { Sorm } from "./src";
 
 Sorm.config({
@@ -19,10 +20,9 @@ async function getData() {
   // data2.body = "body2";
   // await data2.save();
 
-  const datas = await new Data()
-    .where("user_id", "=", 2)
-    .with("users", "user_id", "id")
-    .first();
+  const datas = await new User()
+    .with(["datas", "notes"])
+    .get();
   console.log(datas);
 }
 getData();

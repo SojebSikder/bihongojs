@@ -7,4 +7,8 @@ export class Data extends ORM {
 
   title: string;
   body: string;
+
+  user() {
+    return this.belongsTo("users", "user_id", "id");
+  }
 }

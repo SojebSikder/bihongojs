@@ -68,6 +68,22 @@ export class ORM {
     return this;
   }
 
+  // /**
+  //  * Eagar loading
+  //  * @param relationTable
+  //  * @param localKey
+  //  * @param foreignKey
+  //  * @returns
+  //  */
+  // public with(relationTable, foreignKey = "id", localKey = "id") {
+  //   if (this._with == null) {
+  //     this._with = ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
+  //   } else {
+  //     this._with += ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
+  //   }
+
+  //   return this;
+  // }
   /**
    * Eagar loading
    * @param relationTable
@@ -75,14 +91,25 @@ export class ORM {
    * @param foreignKey
    * @returns
    */
-  public with(relationTable, localKey = "id", foreignKey = "id") {
-    if (this._with == null) {
-      this._with = ` INNER JOIN ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
-    } else {
-      this._with += ` INNER JOIN ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
+  public with(array) {
+    let query = null;
+    for (const key of array) {
+      if (query == null) {
+        query = this[key]();
+      } else {
+        query += this[key]();
+      }
     }
+    this._with = query;
 
     return this;
+  }
+
+  public belongsTo(relationTable, foreignKey = "id", localKey = "id") {
+    let query;
+    query = ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
+
+    return query;
   }
 
   /**
@@ -169,14 +196,30 @@ export class ORM {
   }
 
   /**
+   * Get all properties
+   * @returns
+   */
+  private _getProperty() {
+    const propsToImplode = [];
+
+    const properties = Reflect.ownKeys(this);
+
+    for (const property of properties) {
+      if (!ArrayHelper.inArray(property, ["table", "whereC", "_with"])) {
+        propsToImplode[property] = this[property];
+      }
+    }
+    return propsToImplode;
+  }
+
+  /**
    * save query data
    */
   public async save() {
     const tableName = this.table;
 
-    const propsToImplode = [];
+    const propsToImplode = this._getProperty();
 
-    const properties = Reflect.ownKeys(this);
     // let properties;
     // const ormProperties = ORMStorage.properties;
     // ormProperties.map((item) => {
@@ -188,12 +231,6 @@ export class ORM {
     // });
     // properties = properties.split(",");
     // properties = properties.slice(0, -1);
-
-    for (const property of properties) {
-      if (!ArrayHelper.inArray(property, ["table", "whereC", "_with"])) {
-        propsToImplode[property] = this[property];
-      }
-    }
     /**
      * insert data
      */
