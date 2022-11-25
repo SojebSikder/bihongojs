@@ -20,9 +20,7 @@ async function getData() {
   // data2.body = "body2";
   // await data2.save();
 
-  const datas = await new User()
-    .with(["datas", "notes"])
-    .get();
+  const datas = await new Data().get();
   console.log(datas);
 }
 getData();

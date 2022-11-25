@@ -111,7 +111,7 @@ export class MySQLAdapter implements IAdapter {
           if (err) {
             reject(err);
           }
-          resolve(result);
+          resolve(DBHelper.parseResult(result));
         });
       } catch (error) {
         reject(error);
@@ -126,7 +126,7 @@ export class MySQLAdapter implements IAdapter {
       try {
         this.connection.query(query, function (err, result) {
           if (err) reject(err);
-          resolve(result);
+          resolve(DBHelper.parseResult(result));
         });
       } catch (error) {
         reject(error);
@@ -141,7 +141,7 @@ export class MySQLAdapter implements IAdapter {
       try {
         this.connection.query(query, function (err, result) {
           if (err) reject(err);
-          resolve(result);
+          resolve(DBHelper.parseResult(result));
         });
       } catch (error) {
         reject(error);
@@ -156,7 +156,7 @@ export class MySQLAdapter implements IAdapter {
       try {
         this.connection.query(query, function (err, result) {
           if (err) resolve(err);
-          resolve(result);
+          resolve(DBHelper.parseResult(result));
         });
       } catch (error) {
         reject(error);

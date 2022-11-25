@@ -117,6 +117,14 @@ export class ORM {
   }
 
   /**
+   * raw query
+   */
+  public async rawQuery(query) {
+    const data = await DB.statement(query);
+    return data;
+  }
+
+  /**
    * Fetch query single data
    */
   public async first(columns = ["*"]) {
