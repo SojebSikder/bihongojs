@@ -74,9 +74,9 @@ export class ORM {
    */
   public with(relationTable, localKey = "id", foreignKey = "id") {
     if (this._with == null) {
-      this._with = ` INNER JOIN ${relationTable} ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
+      this._with = ` INNER JOIN ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
     } else {
-      this._with += ` INNER JOIN ${relationTable} ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
+      this._with += ` INNER JOIN ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
     }
 
     return this;
@@ -86,40 +86,33 @@ export class ORM {
    * Fetch query single data
    */
   public async first(columns = ["*"]) {
-    let column;
-    if (Array.isArray(columns)) {
-      column = ArrayHelper.arrayToString(columns);
-    } else {
-      column = columns;
-    }
-    const data = await DB.selectOne(`select ${column} from ${this.table}`);
+    let query = await this._get(columns);
+    const data = await DB.selectOne(query);
     return data;
   }
+
   /**
-   * Fetch query data first
+   * Fetch query data
    */
-  public async getOne(columns = ["*"]) {
+  private async _get(columns = ["*"]) {
     const column = ArrayHelper.arrayToString(columns);
     let query;
+    if (!this.whereC) {
+      this.whereC = "";
+    }
     if (this._with == null) {
       query = `select ${column} from ${this.table} ${this.whereC}`;
     } else {
       query = `select ${column} from ${this.table} ${this._with} ${this.whereC}`;
     }
-    const data = await DB.selectOne(query);
-    return data;
+    return query;
   }
+
   /**
    * Fetch query data
    */
   public async get(columns = ["*"]) {
-    const column = ArrayHelper.arrayToString(columns);
-    let query;
-    if (this._with == null) {
-      query = `select ${column} from ${this.table} ${this.whereC}`;
-    } else {
-      query = `select ${column} from ${this.table} ${this._with} ${this.whereC}`;
-    }
+    let query = await this._get(columns);
     const data = await DB.select(query);
     return data;
   }

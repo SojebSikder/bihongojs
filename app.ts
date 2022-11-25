@@ -9,17 +9,20 @@ Sorm.config({
 });
 
 async function getData() {
-  const data = new Data();
-  data.title = "hello1";
-  data.body = "body1";
-  await data.save();
+  //   const data = new Data();
+  //   data.title = "hello1";
+  //   data.body = "body1";
+  //   await data.save();
 
-  const data2 = new Data();
-  data2.title = "hello2";
-  data2.body = "body2";
-  await data2.save();
+  //   const data2 = new Data();
+  //   data2.title = "hello2";
+  //   data2.body = "body2";
+  //   await data2.save();
 
-  const datas = await new Data().all();
+  const datas = await new Data()
+    // .where("user_id", "=", 2)
+    // .with("users", "user_id", "id")
+    .first();
   console.log(datas);
 }
 getData();
