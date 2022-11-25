@@ -8,4 +8,9 @@ export class ORMStorage {
    * properties of orm column
    */
   public static properties: any[] = [];
+
+  /**
+   * properties of orm table
+   */
+  public static entities: any[] = [];
 }
