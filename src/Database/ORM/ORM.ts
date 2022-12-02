@@ -8,8 +8,11 @@ import { ORMStorage } from "./ORMStorage";
  * @extends {DB}
  * @author Sojeb Sikder <sojebsikder@gmail.com>
  * @example
- * import { ORM } from "../../system/core/ORM";
+ * import { ORM } from "bihongojs";
  * class Data extends ORM {
+ *   constructor() {
+ *    super("datas");
+ *   }
  *  title: string;
  *  text: string;
  * }
@@ -65,61 +68,93 @@ export class ORM {
     return this;
   }
 
+  // /**
+  //  * Eagar loading
+  //  * @param relationTable
+  //  * @param localKey
+  //  * @param foreignKey
+  //  * @returns
+  //  */
+  // public with(relationTable, foreignKey = "id", localKey = "id") {
+  //   if (this._with == null) {
+  //     this._with = ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
+  //   } else {
+  //     this._with += ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
+  //   }
+
+  //   return this;
+  // }
   /**
    * Eagar loading
-   * @param relationTable
-   * @param localKey
-   * @param foreignKey
    * @returns
    */
-  public with(relationTable, localKey = "id", foreignKey = "id") {
-    if (this._with == null) {
-      this._with = ` INNER JOIN ${relationTable} ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
-    } else {
-      this._with += ` INNER JOIN ${relationTable} ${relationTable} ON ${this.table}.${localKey} = ${relationTable}.${foreignKey}`;
+  public with(array) {
+    let query = null;
+    for (const key of array) {
+      if (query == null) {
+        query = this[key]();
+      } else {
+        query += this[key]();
+      }
     }
+    this._with = query;
 
     return this;
+  }
+
+  /**
+   * belongs to relationship
+   * @param relationTable
+   * @param foreignKey
+   * @param localKey
+   * @returns
+   */
+  public belongsTo(relationTable, foreignKey = "id", localKey = "id") {
+    let query;
+    query = ` INNER JOIN ${relationTable} ON ${this.table}.${foreignKey} = ${relationTable}.${localKey}`;
+
+    return query;
+  }
+
+  /**
+   * raw query
+   */
+  public async rawQuery(query) {
+    const data = await DB.statement(query);
+    return data;
   }
 
   /**
    * Fetch query single data
    */
   public async first(columns = ["*"]) {
-    let column;
-    if (Array.isArray(columns)) {
-      column = ArrayHelper.arrayToString(columns);
-    } else {
-      column = columns;
-    }
-    const data = await DB.selectOne(`select ${column} from ${this.table}`);
+    let query = await this._get(columns);
+    const data = await DB.selectOne(query);
     return data;
   }
+
   /**
-   * Fetch query data first
+   * Fetch query data
    */
-  public async getOne(columns = ["*"]) {
+  private async _get(columns = ["*"]) {
     const column = ArrayHelper.arrayToString(columns);
     let query;
+    if (!this.whereC) {
+      this.whereC = "";
+    }
     if (this._with == null) {
       query = `select ${column} from ${this.table} ${this.whereC}`;
     } else {
       query = `select ${column} from ${this.table} ${this._with} ${this.whereC}`;
     }
-    const data = await DB.selectOne(query);
-    return data;
+    return query;
   }
+
   /**
    * Fetch query data
    */
   public async get(columns = ["*"]) {
-    const column = ArrayHelper.arrayToString(columns);
-    let query;
-    if (this._with == null) {
-      query = `select ${column} from ${this.table} ${this.whereC}`;
-    } else {
-      query = `select ${column} from ${this.table} ${this._with} ${this.whereC}`;
-    }
+    let query = await this._get(columns);
     const data = await DB.select(query);
     return data;
   }
@@ -173,14 +208,30 @@ export class ORM {
   }
 
   /**
+   * Get all properties
+   * @returns
+   */
+  private _getProperty() {
+    const propsToImplode = [];
+
+    const properties = Reflect.ownKeys(this);
+
+    for (const property of properties) {
+      if (!ArrayHelper.inArray(property, ["table", "whereC", "_with"])) {
+        propsToImplode[property] = this[property];
+      }
+    }
+    return propsToImplode;
+  }
+
+  /**
    * save query data
    */
   public async save() {
     const tableName = this.table;
 
-    const propsToImplode = [];
+    const propsToImplode = this._getProperty();
 
-    const properties = Reflect.ownKeys(this);
     // let properties;
     // const ormProperties = ORMStorage.properties;
     // ormProperties.map((item) => {
@@ -192,12 +243,6 @@ export class ORM {
     // });
     // properties = properties.split(",");
     // properties = properties.slice(0, -1);
-
-    for (const property of properties) {
-      if (!ArrayHelper.inArray(property, ["table", "whereC", "_with"])) {
-        propsToImplode[property] = this[property];
-      }
-    }
     /**
      * insert data
      */
