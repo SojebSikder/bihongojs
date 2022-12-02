@@ -2,7 +2,6 @@ import { Data } from "./model/Data";
 import { Express } from "express";
 import { Bihongo, Controller, Get, Module, RouterResolver, Sorm } from "./src";
 import { User } from "./model/User";
-import { Sorm } from "./src";
 
 Sorm.config({
   driver: "mysql",
