@@ -1,4 +1,5 @@
-import { ORM } from "../src";
+// example
+import { ORM } from "../../src";
 
 export class Data extends ORM {
   constructor() {

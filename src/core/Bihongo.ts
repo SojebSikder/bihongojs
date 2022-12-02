@@ -2,8 +2,10 @@
 import http from "http";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
+import { Express } from "express";
 // internal imports
 import { ExpressAdapter } from "./Framework/ExpressAdapter";
+import { RouterResolver } from "./Router";
 
 /**
  * Bihongo is another name of this boilarplate core.
@@ -14,7 +16,11 @@ export class Bihongo {
   /**
    * Initialize app.
    */
-  static app({ frameworkAdapter = new ExpressAdapter(), boot, routes }) {
+  static app({
+    frameworkAdapter = new ExpressAdapter(),
+    boot = (app: Express) => null,
+    routes = (app: Express) => null,
+  }) {
     // initialize
     dotenv.config();
     // const app = frameworkAdapter.app();
@@ -33,6 +39,8 @@ export class Bihongo {
     // initialize middleware
     boot(this._app);
     //routes
+    // Initialize router
+    RouterResolver.resolve(this._app);
     routes(this._app);
 
     return server;
