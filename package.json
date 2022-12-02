@@ -1,6 +1,6 @@
 {
   "name": "bihongojs",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "Simple, lightweight abtraction to create Express typescript project.",
   "repository": {
     "type": "git",
@@ -20,8 +20,7 @@
   "author": "Sojeb Sikder <sojebsikder@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc --project tsconfig.json",
-    "start":"nodemon app.ts"
+    "build": "tsc --project tsconfig.json"
   },
   "dependencies": {
     "aws-sdk": "^2.1231.0",

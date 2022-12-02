@@ -1,4 +1,4 @@
-import { ORM } from "../src";
+import { ORM } from "../../src";
 
 export class User extends ORM {
   constructor() {

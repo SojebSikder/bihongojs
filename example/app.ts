@@ -1,6 +1,6 @@
+// simple example here
 import { Data } from "./model/Data";
-import { Express } from "express";
-import { Bihongo, Controller, Get, Module, RouterResolver, Sorm } from "./src";
+import { Bihongo, Controller, Dinjectable, Get, Module, Sorm } from "../src";
 import { User } from "./model/User";
 
 Sorm.config({
@@ -26,30 +26,33 @@ async function getData() {
 }
 // getData();
 
-@Controller("/")
-class AppController {
-  @Get()
-  hello(req, res, next) {
-    res.send("Hello world");
-  }
-  @Get("hello")
-  say(req, res, next) {
-    res.send("say Hello world");
-    next();
+// service
+@Dinjectable()
+class AppService {
+  hello() {
+    return "hello world";
   }
 }
+// controller
+@Dinjectable()
+@Controller("/")
+class AppController {
+  constructor(private readonly appService: AppService) {}
+  @Get()
+  hello(req, res, next) {
+    res.send(this.appService.hello());
+  }
+}
+// app module
 @Module({
   controllers: [AppController],
 })
 class AppModule {}
 
 const app = Bihongo.app({
-  boot: (app) => {},
-  routes: (app: Express) => {
+  routes: (app) => {
     // Initialize modules
     new AppModule();
-    // Initialize router
-    RouterResolver.resolve(app);
   },
 });
 
